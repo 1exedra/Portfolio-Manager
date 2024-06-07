@@ -34,3 +34,10 @@ for stock in tickers:
     future_day = np.array([[len(closing_prices)]])
     future_price = models[stock].predict(future_day)[0]
     future_prices[stock] = future_price
+
+quantities = cp.Variable(len(tickers), integer=True)
+
+constraints = [
+    quantities >= 0,
+    cp.sum(quantities * np.array([future_prices[stock] for stock in tickers])) <= sum(portfolio['Quantity'] * portfolio['Purchase Price'])
+]
