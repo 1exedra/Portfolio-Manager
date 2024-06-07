@@ -27,3 +27,10 @@ for stock in tickers:
     X, y = prepare_data(closing_prices[stock])
     model = LinearRegression().fit(X, y)
     models[stock] = model
+    
+future_prices = {}
+for stock in tickers:
+    days_ahead = 30
+    future_day = np.array([[len(closing_prices)]])
+    future_price = models[stock].predict(future_day)[0]
+    future_prices[stock] = future_price
