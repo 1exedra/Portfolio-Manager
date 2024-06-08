@@ -41,3 +41,15 @@ constraints = [
     quantities >= 0,
     cp.sum(quantities * np.array([future_prices[stock] for stock in tickers])) <= sum(portfolio['Quantity'] * portfolio['Purchase Price'])
 ]
+objective = cp.Maximize(cp.sum(quantities * np.array([future_prices[stock] for stock in tickers])))
+problem = cp.Problem(objective, constraints)
+problem.solve()
+
+decisions = []
+for i, stock in enumerate(tickers):
+    if optimal_quantities[i] > portfolio.loc[portfolio['Stock'] == stock, 'Quantity'].values[0]:
+        decisions.append('Buy')
+    elif optimal_quantities[i] < portfolio.loc[portfolio['Stock'] == stock, 'Quantity'].values[0]:
+        decisions.append('Sell')
+    else:
+        decisions.append('Hold')
