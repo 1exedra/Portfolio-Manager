@@ -53,3 +53,19 @@ for i, stock in enumerate(tickers):
         decisions.append('Sell')
     else:
         decisions.append('Hold')
+
+portfolio['Current Price'] = [yf.Ticker(stock).history(period='1d')['Close'][0] for stock in tickers]
+portfolio['Current Value'] = portfolio['Quantity'] * portfolio['Current Price']
+portfolio['Optimal Quantity'] = optimal_quantities
+portfolio['Decision'] = decisions
+
+
+plt.figure(figsize=(10, 6))
+plt.pie(portfolio['Current Value'], labels=portfolio['Stock'], autopct='%1.1f%%')
+plt.title('Current Portfolio Distribution')
+plt.show()
+
+portfolio.to_csv('updated_portfolio.csv', index=False)
+files.download('updated_portfolio.csv')
+
+print(portfolio)
